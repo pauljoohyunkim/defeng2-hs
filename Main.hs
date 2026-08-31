@@ -40,6 +40,6 @@ main = do
     let trees = map (createTree CVConsonantFormer) depths ++
                 map (createTree CVVowel) depths
 
-    print trees
+    let generated_list = concat $ map (\tree -> visitTree tree c_former_list v_list c_latter_list "") trees
 
-    return ()
+    mapM_ putStrLn generated_list

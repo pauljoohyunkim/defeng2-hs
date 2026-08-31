@@ -10,10 +10,15 @@ createTree CVConsonantFormer depth = Node CVConsonantFormer depth [createTree CV
 createTree CVConsonantLatter depth = Node CVConsonantLatter depth [createTree CVConsonantFormer (depth-1)]
 createTree CVVowel depth           = Node CVVowel depth [createTree CVConsonantFormer (depth-1), createTree CVConsonantLatter (depth-1)]
 
--- Tree c_former, v, c_latter, prefix => List of words.
+-- Tree c_former, v, c_latter, prefix_rev => List of words.
 visitTree :: CVTree -> [String] -> [String] -> [String] -> String -> [String]
-visitTree (Node t depth subtrees) c_former v c_latter prefix
-    | t == CVConsonantFormer = 
-    | t == CVConsonantLatter = 
-    | t == CVVowel = 
+visitTree (Node t 0 _) c_former v c_latter prefix
+    | t == CVConsonantFormer = map (prefix++) c_former
+    | t == CVVowel           = map (prefix++) v
+    | t == CVConsonantLatter = map (prefix++) c_latter
+visitTree (Node t depth subtrees) c_former v c_latter prefix = let prefixes
+                                                                    | t == CVConsonantFormer = map (prefix++) c_former
+                                                                    | t == CVVowel           = map (prefix++) v
+                                                                    | t == CVConsonantLatter = map (prefix++) c_latter
+                                                               in  concat [visitTree subtree c_former v c_latter p | p <- prefixes, subtree <- subtrees]
 
