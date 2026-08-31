@@ -16,9 +16,9 @@ visitTree (Node t 0 _) c_former v c_latter prefix
     | t == CVConsonantFormer = map (prefix++) c_former
     | t == CVVowel           = map (prefix++) v
     | t == CVConsonantLatter = map (prefix++) c_latter
---visitTree (Node t depth subtrees) c_former v c_latter prefix
---    | t == CVConsonantFormer = concat prefix_rev_list
---                                where prefix_rev_list = map (\tree -> visitTree tree c_former v c_latter prefix_rev) subtrees
---    | t == CVVowel = 
---    | t == CVConsonantLatter = 
+visitTree (Node t depth subtrees) c_former v c_latter prefix = let prefixes
+                                                                    | t == CVConsonantFormer = map (prefix++) c_former
+                                                                    | t == CVVowel           = map (prefix++) v
+                                                                    | t == CVConsonantLatter = map (prefix++) c_latter
+                                                               in  concat [visitTree subtree c_former v c_latter p | p <- prefixes, subtree <- subtrees]
 
